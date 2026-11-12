@@ -1,0 +1,18 @@
+version: 0.1
+
+workflows:
+  main:
+    jobs:
+    - build
+
+jobs:
+  build:
+    steps:
+    - clone
+    - run: wodby ci init $WODBY_BUILD_ID
+    # Puts the Moodle release from .moodle-version together with the plugins in
+    # public/, so the PHP and Nginx images are built from the same code.
+    - run: wodby ci run -- moodle-install-release
+    - run: wodby ci build
+    - run: wodby ci push
+    - run: wodby ci deploy
